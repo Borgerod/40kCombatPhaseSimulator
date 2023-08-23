@@ -47,77 +47,50 @@ def random_accuracy_test():
     # -------------------------------------------------------------------------------------------
 
 
+''' NEW VERSION '''
 # This function returns the amount of integers in the list that is above the hit number
-def check_hits(hit_number, rolled_dice):
-    total_hit_number = 0
-    length = len(rolled_dice)
-    # print(length)
-    for hits in rolled_dice:
-        if hits >= int(hit_number):
-            total_hit_number += 1
-    return total_hit_number
-
+def check_hits(BS, num_attacks):
+    hit_rolls = roll_dice(num_attacks)
+    print(hit_rolls)
+    total_hits = 0
+    for hits in hit_rolls:
+        if hits >= int(BS):
+            total_hits += 1
+    return total_hits
 
 def check_wounds(toughness, strength1, rolled_dice):
-    if int(strength1) - 3 == int(toughness):
-        wound_number = 2
-    elif int(strength1) - 1 == int(toughness) or int(strength1) - 2 == int(toughness):
-        wound_number = 3
+    if int(strength1) * 2 <= int(toughness):
+        to_wound = 2
+    elif int(strength1) < int(toughness) or int(strength1) - 2 == int(toughness):
+        to_wound = 3
     elif int(strength1) == int(toughness):
-        wound_number = 4
-    elif int(strength1) + 1 == int(toughness) or int(strength1) + 2 == int(toughness):
-        wound_number = 5
-    elif int(strength1) + 3 == int(toughness):
-        wound_number = 6
+        to_wound = 4
+    elif int(strength1) > int(toughness):
+        to_wound = 5
+    elif int(strength1) >= int(toughness):
+        to_wound = 6
     else:
         print("Something went wrong in check_wounds: ")
-    # print("This is wound number: " + str(wound_number))
-    total_wound_number = 0
-    length = len(rolled_dice)
-    #print(length)
+    total_num_wounds = 0
     for wounds in rolled_dice:
-        if wounds >= wound_number:
-            total_wound_number += 1
-    return total_wound_number
+        if wounds >= to_wound:
+            total_num_wounds += 1
+    return total_num_wounds
 
 
-def saving_throws(wound_dice, best_sv):
-    amt_wounds = 0
-    amt_saves = 0
-    wound_list = roll_dice(wound_dice)
-    for saves in wound_list:
-        if saves >= int(best_sv):
-            amt_saves += 1
+def saving_throws(num_wounds, best_sv, AP):
+    num_not_saved = 0
+    num_saved = 0
+    save_rolls = roll_dice(num_wounds)
+    print(save_rolls)
+    for save_roll in save_rolls:
+        adj_save_roll = save_roll-int(AP)
+        if adj_save_roll >= int(best_sv):
+            num_saved += 1
         else:
-            amt_wounds += 1
+            num_not_saved += 1
 
-    return amt_wounds, amt_saves
-    # print("Amount of wounds: " + str(amt_wounds))
-    # print("Amount of saves: " + str(amt_saves))
+    return num_not_saved, num_saved
+    # print("Amount of wounds: " + str(num_not_saved))
+    # print("Amount of save_roll: " + str(num_saved))
 
-
-"""
-# -----------------------------------Main Function---------------
-p = "a"
-while p != "q":
-    number_of_dice = input("How many attacks are you rolling?: ")
-    hit_number = input("What is the Ballistic skill/weapon skill of the user?: ")
-    strength = input("What is the strength of the user(modified with weapon): ")
-    Toughness = input("What is the toughness of the target?: ")
-
-    i = roll_dice(number_of_dice)
-    t = check_hits(hit_number, i)
-    a = roll_dice(t)
-    b = check_wounds(Toughness, strength, a)
-    print("This is the amount of wounds that you got: " + str(b))
-
-    x = input("What is the best save that the unit has?(accounting for ap): ")
-    saving_throws(b, x)
-
-    p = input("press any key to run again, Press q to quit: ")
-
-
-# ---------------------------------------------------------------
-
-# random_accuracy_test()
-"""
